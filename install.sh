@@ -23,6 +23,7 @@ make
 make install
 cd ..
 
+echo "installing libcdms"
 cd libcdms
 make clean
 ./configure --enable-dap --with-ncinc=/usr/local/include --with-nclib=/usr/local/lib --prefix=/usr/local
@@ -30,6 +31,7 @@ make
 make install
 cd ..
 
+echo "Install mako"
 easy_install -U mako
 easy_install -U numpy
 
