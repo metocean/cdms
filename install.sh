@@ -32,10 +32,10 @@ easy_install -U mako
 easy_install -U numpy
 
 for package in cdtime cdms2 regrid2; do
-cd $package
-python setup.py build
-python setup.py install
-cd ..
+  cd $package
+  python setup.py build
+  python setup.py install
+  cd ..
 done
 
 
