@@ -33,6 +33,8 @@ cd ..
 
 echo "Install mako"
 easy_install -U mako
+
+echo "install numpy"
 easy_install -U numpy
 
 for package in cdtime cdms2 regrid2; do
