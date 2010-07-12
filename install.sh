@@ -13,7 +13,7 @@ make
 make install
 cd ..
 
-tar -xzf netcdf*.tgz
+tar -xzf netcdf.tar.gz
 cd netcdf*
 make clean
 ./configure --enable-netcdf-4 --with-hdf5=/usr/local/HDF5 --enable-cxx-4 --enable-dap
