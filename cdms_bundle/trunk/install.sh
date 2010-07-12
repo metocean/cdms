@@ -5,7 +5,7 @@ export FC=gfortran
 export F77=gfortran
 export LDFLAGS=-lm
 
-tar -xzvf hdf*
+tar -xzvf hdf*.tgz
 cd hdf*
 make clean
 ./configure --prefix=/usr/local/HDF5 --enable-shared=no
@@ -13,7 +13,7 @@ make
 make install
 cd ..
 
-tar -xzf netcdf*
+tar -xzf netcdf*.tgz
 cd netcdf*
 make clean
 ./configure --enable-netcdf-4 --with-hdf5=/usr/local/HDF5 --enable-cxx-4 --enable-dap
