@@ -5,7 +5,7 @@ export FC=gfortran
 export F77=gfortran
 export LDFLAGS=-lm
 
-echo "installing HDF-5" 
+echo "Installing HDF-5" 
 tar -xzvf hdf5.tar.gz
 cd hdf*
 make clean
@@ -14,6 +14,7 @@ make
 make install
 cd ..
 
+echo "Installing netcdf"
 tar -xzf netcdf.tar.gz
 cd netcdf*
 make clean
