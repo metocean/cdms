@@ -5,7 +5,7 @@ export FC=gfortran
 export F77=gfortran
 export LDFLAGS=-lm
 
-tar -xzvf hdf*.tgz
+tar -xzvf hdf5.tar.gz
 cd hdf*
 make clean
 ./configure --prefix=/usr/local/HDF5 --enable-shared=no
