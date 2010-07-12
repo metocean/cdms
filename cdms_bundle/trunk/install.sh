@@ -36,6 +36,7 @@ cd $package
 python setup.py build
 python setup.py install
 cd ..
+done
 
 
 
