@@ -23,7 +23,7 @@ make
 make install
 cd ..
 
-echo "installing libcdms"
+echo "Installing libcdms"
 cd libcdms
 make clean
 ./configure --enable-dap --with-ncinc=/usr/local/include --with-nclib=/usr/local/lib --prefix=/usr/local
@@ -31,13 +31,14 @@ make
 make install
 cd ..
 
-echo "Install mako"
+echo "Installing mako"
 easy_install -U mako
 
-echo "install numpy"
+echo "Installing numpy"
 easy_install -U numpy
 
 for package in cdtime cdms2 regrid2; do
+  echo "Installing $package"
   cd $package
   python setup.py build
   python setup.py install
