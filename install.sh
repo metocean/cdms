@@ -5,6 +5,7 @@ export FC=gfortran
 export F77=gfortran
 export LDFLAGS=-lm
 
+echo "installing HDF-5" 
 tar -xzvf hdf5.tar.gz
 cd hdf*
 make clean
