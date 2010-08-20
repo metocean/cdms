@@ -20,7 +20,9 @@ setup (name = "cdtime",
        include_dirs = ['Include'],
        ext_modules = [Extension('cdtime', 
                        ['Src/cdtimemodule.c'],
-                       library_dirs = ['/usr/local/lib','/usr/local/HDF5/lib'],libraries = ['cdms','netcdf','hdf5_hl','hdf5','curl','hdf5_hl'])
+                       include_dirs = ['../libcdms/include'],
+                       library_dirs = ['/usr/lib', '../libcdms/lib'],
+                       libraries = ['cdms','netcdf','hdf5_hl','hdf5','curl','hdf5_hl'])
        ]
 )
     
