@@ -1,50 +1,39 @@
-#make sure zlib-devel and curl-devel are installed
+#!/bin/bash
+
+#terminate on error
+set -e
 
 export CFLAGS=-fPIC
 export FC=gfortran
 export F77=gfortran
-export LDFLAGS=-lm
 
-echo "Installing HDF-5" 
-tar -xzvf hdf5.tar.gz
-cd hdf*
-make clean
-./configure --prefix=/usr/local/HDF5 --enable-shared=no
-make
-make install
-cd ..
+install_prefix=$PWD/install
+yum_install=yum
+if [ "$UID" != "0" ]; then
+  install_prefix=/usr/local
+  yum_install=sudo yum
+fi
+ 
+# anything already installed will automatically ignored
+$yum_install install -y zlib-devel curl-devel netcdf netcdf-devel netcdf-static python-mako numpy
 
-echo "Installing netcdf"
-tar -xzf netcdf.tar.gz
-cd netcdf*
-make clean
-./configure --enable-netcdf-4 --with-hdf5=/usr/local/HDF5 --enable-cxx-4 --enable-dap
-make
-make install
-cd ..
+mkdir -p $install_prefix/bin
+mkdir -p $install_prefix/lib
+mkdir -p $install_prefix/include
+mkdir -p $install_prefix/man/man3
 
 echo "Installing libcdms"
 cd libcdms
-make clean
-./configure --enable-dap --with-ncinc=/usr/local/include --with-nclib=/usr/local/lib --prefix=/usr/local
+make -i clean
+./configure --prefix=$install_prefix --disable-ql --disable-dap --disable-hdf --disable-drs --with-nclib=/usr/lib64 --with-ncinc=/usr/include
 make
 make install
 cd ..
 
-echo "Installing mako"
-easy_install -U mako
-
-echo "Installing numpy"
-easy_install -U numpy
 
 for package in cdtime cdms2 regrid2; do
   echo "Installing $package"
   cd $package
-  python setup.py build
-  python setup.py install
+  python setup.py install --prefix=$install_prefix
   cd ..
 done
-
-
-
-
