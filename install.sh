@@ -8,14 +8,11 @@ export FC=gfortran
 export F77=gfortran
 
 install_prefix=$PWD/install
-yum_install=yum
-if [ "$UID" != "0" ]; then
+if [ "$UID" == "0" ]; then
   install_prefix=/usr/local
-  yum_install=sudo yum
+  # anything already installed will automatically ignored
+  yum install -y zlib-devel curl-devel netcdf netcdf-devel netcdf-static python-mako numpy
 fi
- 
-# anything already installed will automatically ignored
-$yum_install install -y zlib-devel curl-devel netcdf netcdf-devel netcdf-static python-mako numpy
 
 mkdir -p $install_prefix/bin
 mkdir -p $install_prefix/lib
