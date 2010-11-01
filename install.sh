@@ -1,9 +1,7 @@
 #
 # Dependencies
 #
-# Anything already installed will automatically be ignored
-# sudo yum install -y zlib-devel curl-devel python-mako
-
+# zlib-devel curl-devel python-mako
 
 
 
@@ -20,6 +18,19 @@ export LDFLAGS=-lm
 
 
 mkdir -p $build_dir
+mkdir -p $build_dir
+
+if [[ ! -s $install_dir/lib/libdf.a || ! -s $install_dir/lib/libmfhdf.a || ! -s $install_dir/include/hdf.h ]]; then
+  echo "Installing HDF-4"
+  pushd $build_dir
+  tar -xzvf ../hdf-4.2.5.tar.gz
+  cd hdf-4.2.5
+  make clean
+  ./configure --prefix=$install_dir --disable-shared --disable-fortran --disable-netcdf
+  make
+  make install
+  popd
+fi
 
 if [[ ! -s $install_dir/lib/libhdf5.a || ! -s $install_dir/include/H5FDcore.h ]]; then
   echo "Installing HDF-5"
@@ -74,7 +85,6 @@ make
 mkdir --parents $install_dir/man/man3
 make install
 popd
-
 
 python_version=$(python --version 2>&1 | grep -E -o "[0-9]\.[0-9]")
 python_lib_path=$install_dir/lib/python$python_version/site-packages
