@@ -15,19 +15,19 @@ import numpy
 
 macros = []
 #macros.append(("NONC4",None))
-    
+
 setup (name = "cdms2",
        version='5.2',
        description = "Climate Data Management System, Numpy version",
        url = "http://cdat.sf.net",
        packages = ['cdms2'],
        package_dir = {'cdms2': 'Lib'},
-       include_dirs = ['Include', numpy.lib.utils.get_include()],
+       include_dirs = ['Include', numpy.lib.utils.get_include(), os.path.join(target_prefix,'include')],
        scripts = ['Script/cdscan', 'Script/convertcdms.py'],
        ext_modules = [Extension('cdms2.Cdunif',
                                 ['Src/Cdunifmodule.c'],
-                                library_dirs = ['/usr/lib', '../libcdms/lib'],
-                                libraries = ['cdms','netcdf','hdf5_hl','hdf5','curl','z'],
+				library_dirs = [os.path.join(target_prefix,'lib')],
+				libraries = ['cdms','netcdf','hdf5_hl','hdf5','curl','grib2c', 'z', 'jasper', 'png'],
                                 define_macros = macros,
                                 ),
                       Extension('cdms2._bindex',

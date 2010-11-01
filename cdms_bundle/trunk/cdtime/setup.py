@@ -12,6 +12,8 @@ for i in range(len(sys.argv)):
         print 'Target is:',target_prefix
 sys.path.insert(0,os.path.join(target_prefix,'lib','python%i.%i' % sys.version_info[:2],'site-packages')) 
 #import cdat_info
+
+localLibPath=os.path.join(target_prefix,'lib')
         
 setup (name = "cdtime",
        description = "Time utilities",
@@ -20,9 +22,8 @@ setup (name = "cdtime",
        include_dirs = ['Include'],
        ext_modules = [Extension('cdtime', 
                        ['Src/cdtimemodule.c'],
-                       include_dirs = ['../libcdms/include'],
-                       library_dirs = ['/usr/lib', '../libcdms/lib'],
-                       libraries = ['cdms','netcdf','hdf5_hl','hdf5','curl','hdf5_hl'])
+                       library_dirs = ['/usr/local/lib',localLibPath],
+                       libraries = ['cdms','netcdf','hdf5_hl','hdf5','hdf5_hl','curl','grib2c', 'z', 'jasper', 'png'])
        ]
 )
     
