@@ -221,25 +221,25 @@ int cuopenread_grads(const char* controlpath, const char* datapath) {
   }
   if(idmo){
 	  if(idmo % 12 == 0){
-		  sprintf(dim->units,"years since %d-%.0g-%.0g %.0g:%.0g",fp[0],fp[1],fp[2],fp[3],fp[4]);
+		  sprintf(dim->units,"years since %.0f-%.0f-%.0f %.0f:%.0f",fp[0],fp[1],fp[2],fp[3],fp[4]);
 		  dim->interval = idmo/12;
 	  }
 	  else{
-		  sprintf(dim->units,"months since %d-%.0g-%.0g %.0g:%.0g",fp[0],fp[1],fp[2],fp[3],fp[4]);
+		  sprintf(dim->units,"months since %.0f-%.0f-%.0f %.0f:%.0f",fp[0],fp[1],fp[2],fp[3],fp[4]);
 		  dim->interval = fp[5];
 	  }
   }
   else if(idmin){
 	  if(idmin % 1440 == 0){
-		  sprintf(dim->units,"days since %d-%.0g-%.0g %.0g:%.0g",fp[0],fp[1],fp[2],fp[3],fp[4]);
+		  sprintf(dim->units,"days since %.0f-%.0f-%.0f %.0f:%.0f",fp[0],fp[1],fp[2],fp[3],fp[4]);
 		  dim->interval = idmin/1440;
 	  }
 	  else if(idmin % 60 == 0){
-		  sprintf(dim->units,"hours since %d-%.0g-%.0g %.0g:%.0g",fp[0],fp[1],fp[2],fp[3],fp[4]);
+		  sprintf(dim->units,"hours since %.0f-%.0f-%.0f %.0f:%.0f",fp[0],fp[1],fp[2],fp[3],fp[4]);
 		  dim->interval = idmin/60;
 	  }
 	  else {
-		  sprintf(dim->units,"minutes since %d-%.0g-%.0g %.0g:%.0g",fp[0],fp[1],fp[2],fp[3],fp[4]);
+		  sprintf(dim->units,"minutes since %.0f-%.0f-%.0f %.0f:%.0f",fp[0],fp[1],fp[2],fp[3],fp[4]);
 		  dim->interval = fp[6];
 	  }
   }
