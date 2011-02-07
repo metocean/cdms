@@ -3,7 +3,10 @@
 #
 # zlib-devel curl-devel python-mako
 
-
+python=$(which python)
+if [ "$1" != "" ]; then
+  python=$1
+fi 
 
 build_dir=`pwd`/build
 install_dir=`pwd`/install #the actual place into which cdms is installed can be found at the end of the script
@@ -74,6 +77,8 @@ if [[ ! -s $install_dir/lib/libgrib2c.a || ! -s $install_dir/include/grib2.h ]];
 fi
 
 
+
+
 echo "Installing libcdms"
 pushd libcdms
 make distclean
@@ -86,23 +91,24 @@ mkdir --parents $install_dir/man/man3
 make install
 popd
 
-python_version=$(python --version 2>&1 | grep -E -o "[0-9]\.[0-9]")
+python_prefix=$($python"-config" --prefix)
+python_version=$($python --version 2>&1 | grep -E -o "[0-9]\.[0-9]")
 python_lib_path=$install_dir/lib/python$python_version/site-packages
 export PYTHONPATH=$python_lib_path
 mkdir -p $python_lib_path
 
 if [[ ! -s $python_lib_path/numpy-1.4.1-py$python_version-linux-x86_64.egg ]]; then
   echo "Installing numpy"
-  easy_install --prefix $install_dir numpy-1.4.1.tar.gz
+  $python_prefix/bin/easy_install --prefix $install_dir numpy-1.4.1.tar.gz
 fi
 
 for package in cdtime cdms2 regrid2; do
   echo "Installing $package"
   cd $package
   rm -rf build
-  python setup.py install --force --prefix=$install_dir --install-lib=$install_dir/lib/python$python_version/site-packages
+  $python setup.py install --force --prefix=$install_dir --install-lib=$install_dir/lib/python$python_version/site-packages
   cd ..
 done
 
 
-sudo cp -r  install/lib/python$python_version/site-packages/* /usr/lib64/python$python_version/site-packages/
+sudo cp -r $install_dir/lib/python$python_version/site-packages/* $python_prefix/lib/python$python_version/site-packages/

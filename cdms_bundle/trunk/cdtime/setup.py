@@ -22,7 +22,7 @@ setup (name = "cdtime",
        include_dirs = ['Include',os.path.join(target_prefix,'include')],
        ext_modules = [Extension('cdtime', 
                        ['Src/cdtimemodule.c'],
-                       library_dirs = ['/usr/local/lib',localLibPath],
+                       library_dirs = [localLibPath],
                        libraries = ['cdms','mfhdf','df','netcdf','hdf5_hl','hdf5','hdf5_hl','curl','grib2c', 'z', 'jasper', 'png'])
        ]
 )
