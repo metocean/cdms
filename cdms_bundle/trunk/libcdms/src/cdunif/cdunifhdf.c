@@ -226,13 +226,12 @@ int cudiminq_hdf(CuFile* file, int dimidx, char* dimname, char* dimunits, CuType
 	int ndims;
 	int get_dimid;
 	int saveopts;
-	long len;
 	hdf_type hdftype, hdfunitstype;
 	int natts;
 	char varname[H4_MAX_NC_NAME+1];
 	int attlen;
 
-	int32 sds_id, attr_index, datatype, nattrs;
+	int32 sds_id, attr_index, len, datatype, nattrs;
 	int32 dim_sizes[H4_MAX_VAR_DIMS];
 	char attr_name[H4_MAX_NC_NAME];
 	int32 dimid;
@@ -329,14 +328,13 @@ int cudimget_hdf(CuFile* file, int dimidx, void* values){
 	int ndims;
 	int saveopts;
 	long i;
-	long length;
 	long start;
 	char varname[H4_MAX_NC_NAME+1];
 	hdf_type hdftype;
 	int natts;
 	int32 dimid;
 
-        int32 sds_id, datatype, nattrs, attr_index, num_type, count;
+        int32 sds_id, datatype, length, nattrs, attr_index, num_type, count;
         int32 dim_sizes[H4_MAX_VAR_DIMS];
 	char attr_name[H4_MAX_NC_NAME];
 
