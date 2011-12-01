@@ -102,7 +102,7 @@ if [[ ! -s $python_lib_path/numpy-1.4.1-py$python_version-linux-x86_64.egg ]]; t
   $python_prefix/bin/easy_install --prefix $install_dir numpy-1.4.1.tar.gz
 fi
 
-for package in cdtime cdms2 regrid2; do
+for package in cdtime cdms2 regrid2 regrid; do
   echo "Installing $package"
   cd $package
   rm -rf build
