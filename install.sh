@@ -97,9 +97,9 @@ python_lib_path=$install_dir/lib/python$python_version/site-packages
 export PYTHONPATH=$python_lib_path
 mkdir -p $python_lib_path
 
-if [[ ! -s $python_lib_path/numpy-1.4.1-py$python_version-linux-x86_64.egg ]]; then
+if [[ ! -s $python_lib_path/numpy-1.6.1-py$python_version-linux-x86_64.egg ]]; then
   echo "Installing numpy"
-  $python_prefix/bin/easy_install --prefix $install_dir numpy-1.4.1.tar.gz
+  $python_prefix/bin/easy_install --prefix $install_dir numpy-1.6.1.tar.gz
 fi
 
 for package in cdtime cdms2 regrid2 regrid; do
