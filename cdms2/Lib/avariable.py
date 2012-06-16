@@ -353,7 +353,7 @@ class AbstractVariable(CdmsObj, Slab):
             pass
         else:
             raise CDMSError, 'Invalid missing value %s'%`value`
-        
+        self._fill_value=None 
         self.missing_value = value
 
 
