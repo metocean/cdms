@@ -1,7 +1,7 @@
 #
 # Dependencies
 #
-# zlib-devel curl-devel python-mako
+# libpng-devel jasper-devel zlib-devel curl-devel python-mako easy_install
 
 python=$(which python)
 if [ "$1" != "" ]; then
@@ -97,9 +97,13 @@ python_lib_path=$install_dir/lib/python$python_version/site-packages
 export PYTHONPATH=$python_lib_path
 mkdir -p $python_lib_path
 
-if [[ ! -s $python_lib_path/numpy-1.6.1-py$python_version-linux-x86_64.egg ]]; then
+if [[ ! -s $python_lib_path/numpy ]]; then
   echo "Installing numpy"
-  $python_prefix/bin/easy_install --prefix $install_dir numpy-1.6.1.tar.gz
+  pushd $build_dir
+  tar -xzvf ../numpy-1.6.1.tar.gz
+  cd numpy-1.6.1
+  $python_prefix/bin/python setup.py install --prefix $install_dir
+  popd  
 fi
 
 for package in cdtime cdms2 regrid2 regrid; do
