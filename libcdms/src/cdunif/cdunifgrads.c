@@ -588,6 +588,13 @@ int grads_varget( CuFile* file, int varid, int* ib, int* ie, void* value) {
   int i,siz;
   int rc,len,verb=0;
   char tempname[4096];
+struct gavar   *pvar2;
+struct gagrid *pgr2=NULL;
+char *ru, *r2u, vnam[20];
+gadouble *r,*r2;
+gaint ii,jj,j,size,sbu;
+gafloat wrot;
+size_t sz;
 
   extern int cuIsAbsolute(char *path, int len);
 
@@ -660,9 +667,109 @@ int grads_varget( CuFile* file, int varid, int* ib, int* ie, void* value) {
   len=pgr->isiz*pgr->jsiz;
 
   if(verb) {
-    printf("------gaggrd--------- %d %d %s \n",rc,len,pvr->abbrv);
-    for(i=0;i<len;i++) printf("qqq %d %g\n",i,*(pgr->grid+i));
+/*    printf("------gaggrd--------- %d %d %s \n",rc,len,pvr->abbrv); */
+/*    for(i=0;i<len;i++) printf("qqq %d %g\n",i,*(pgr->grid+i)); */
   }
+
+
+  /* rotate wind components if necessary */
+  if (pfi && pvr && pfi->ppflag && pfi->ppwrot && pvr->vecpair>0) {
+      pgr2 = NULL;
+          sz = sizeof(struct gagrid);
+              pgr2 = (struct gagrid *)galloc(sz,"gpgr2");
+                  if (pgr2==NULL) {
+                        gaprnt (0,"Memory allocation error: Data I/O \n");
+                              gagfre(pgr);
+                                    return 0;
+                                        }
+                                            *pgr2 = *pgr;
+      
+    /* Find the matching vector component */
+    if (pvr->isu) sbu=0;    /* if pvr is u, then matching component should not be u */
+    else sbu=1;              /* pvr is v, so matching component should be u */
+    pvar2 = pfi->pvar1;
+
+    i = 0;
+    while (i<pfi->vnum) {
+      if ((pvar2->vecpair == pvr->vecpair) &&
+          (pvar2->isu     == sbu)) break;
+      pvar2++; i++;
+    }
+
+    if (i>=pfi->vnum) { /* didn't find a match */
+      ru = pgr->umask;
+      size = pgr->isiz*pgr->jsiz;
+      for (i=0; i<size; i++) {*ru=0; ru++;}
+    } else {
+      /* get the 2nd grid */
+      pgr2->pvar = pvar2;
+      rc = gaggrd (pgr2);
+      if (rc>0) {
+/*        snprintf(pout,255,"Data Request Error:  Error for variable '%s'\n", vnam); */
+/*        gaprnt (0,pout); */
+        gagfre(pgr);
+        gagfre(pgr2);
+        return 0;
+      }
+
+      /* r is u component, r2 is v component */
+      if (pvar2->isu) {
+        r = pgr2->grid;
+        r2 = pgr->grid;
+        ru = pgr2->umask;
+        r2u = pgr->umask;
+      } else {
+        r = pgr->grid;
+        r2 = pgr2->grid;
+        ru = pgr->umask;
+        r2u = pgr2->umask;
+      }
+
+      ii = pgr->dimmin[0];
+      jj = pgr->dimmin[1];
+      for (j=0; j<pgr->jsiz; j++) {
+        if (pgr->idim == 0) ii = pgr->dimmin[0];
+        if (pgr->idim == 1) jj = pgr->dimmin[1];
+        for (i=0; i<pgr->isiz; i++) {
+         if (*ru==0 || *r2u==0) {  /* u or v is undefined */
+            *ru = 0;
+            *r2u = 0;
+          } else {
+            if (ii<1 || ii>pfi->dnum[0] ||
+                jj<1 || jj>pfi->dnum[1]) {   /* outside file's grid dimensions */
+              *ru = 0;
+              *r2u = 0;
+            } else {
+              /* get wrot value for grid element */
+              wrot = *(pfi->ppw + (jj-1)*pfi->dnum[0] + ii - 1);
+              if (wrot < -900.0) {
+                *ru = 0;
+                *r2u = 0;
+              }
+              else if (wrot != 0.0) {
+                if (pvar2->isu) {
+                  *r2 = (*r)*sin(wrot) + (*r2)*cos(wrot); /* display variable is v */
+                  *r2u = 1;
+                }
+                else {
+                  *r = (*r)*cos(wrot) - (*r2)*sin(wrot); /* display variable is u */
+                  *ru = 1;
+                }
+              }
+            }
+          }
+          r++; r2++; ru++; r2u++;
+          if (pgr->idim == 0) ii++;
+          if (pgr->idim == 1) jj++;
+        }
+
+        if (pgr->jdim == 1) jj++;
+      }
+
+    gagfre(pgr2);
+  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }  
+  /* end wind rotation */
+
 
   /* load into output array */
 
