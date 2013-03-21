@@ -1143,7 +1143,11 @@ PyCdunifFile_Open(char *filename, char *mode)
   if (mode[0] == 'w') {
     Py_BEGIN_ALLOW_THREADS;
     acquire_Cdunif_lock();
-    ncmode = NC_CLOBBER|NC_64BIT_OFFSET;
+    if (mode[1] == '+') {
+	ncmode=NC_CLOBBER|NC_64BIT_OFFSET;
+    }else{
+    	ncmode = NC_CLOBBER;
+    }
 #ifndef NONC4
     if ((cdms_shuffle!=0) || (cdms_deflate!=0)) {
       ncmode = NC_CLOBBER|NC_NETCDF4;
