@@ -16,7 +16,7 @@ install_dir=`pwd`/install #the actual place into which cdms is installed can be 
 export CFLAGS="-fPIC"
 export FC=gfortran
 export F77=gfortran
-export LDFLAGS=-lm
+export LDFLAGS=-lm 
 
 
 
@@ -102,7 +102,7 @@ if [[ ! -s $python_lib_path/numpy ]]; then
   pushd $build_dir
   tar -xzvf ../numpy-1.6.1.tar.gz
   cd numpy-1.6.1
-  $python_prefix/bin/python setup.py install --prefix $install_dir
+  $python_prefix/bin/python setup.py install --prefix $install_dir --install-lib=$install_dir/lib/python$python_version/site-packages
   popd  
 fi
 
