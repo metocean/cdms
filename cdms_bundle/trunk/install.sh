@@ -7,6 +7,7 @@ python=$(which python)
 if [ "$1" != "" ]; then
   python=$1
 fi 
+python_config=$(which python-config)
 
 build_dir=`pwd`/build
 install_dir=`pwd`/install #the actual place into which cdms is installed can be found at the end of the script
@@ -18,15 +19,18 @@ export FC=gfortran
 export F77=gfortran
 export LDFLAGS=-lm 
 
+python_prefix=$($python_config --prefix)
+python_version=$($python --version 2>&1 | grep -E -o "[0-9]\.[0-9]")
+python_lib_path=$install_dir/lib/python$python_version/site-packages
+python_install_path=$python_prefix/lib/python$python_version/site-packages
+export PYTHONPATH=$python_lib_path
 
-
-mkdir -p $build_dir
 mkdir -p $build_dir
 
 if [[ ! -s $install_dir/lib/libdf.a || ! -s $install_dir/lib/libmfhdf.a || ! -s $install_dir/include/hdf.h ]]; then
   echo "Installing HDF-4"
   pushd $build_dir
-  tar -xzvf ../hdf-4.2.5.tar.gz
+  tar -xzf ../hdf-4.2.5.tar.gz
   cd hdf-4.2.5
   make clean
   ./configure --prefix=$install_dir --disable-shared --disable-fortran --disable-netcdf
@@ -38,7 +42,7 @@ fi
 if [[ ! -s $install_dir/lib/libhdf5.a || ! -s $install_dir/include/H5FDcore.h ]]; then
   echo "Installing HDF-5"
   pushd $build_dir
-  tar -xzvf ../hdf5-1.8.3.tar.gz
+  tar -xzf ../hdf5-1.8.3.tar.gz
   cd hdf5-1.8.3
   make clean
   ./configure --prefix=$install_dir --enable-shared=no
@@ -76,9 +80,6 @@ if [[ ! -s $install_dir/lib/libgrib2c.a || ! -s $install_dir/include/grib2.h ]];
   popd
 fi
 
-
-
-
 echo "Installing libcdms"
 pushd libcdms
 make distclean
@@ -91,19 +92,16 @@ mkdir --parents $install_dir/man/man3
 make install
 popd
 
-python_prefix=$($python"-config" --prefix)
-python_version=$($python --version 2>&1 | grep -E -o "[0-9]\.[0-9]")
-python_lib_path=$install_dir/lib/python$python_version/site-packages
-export PYTHONPATH=$python_lib_path
 mkdir -p $python_lib_path
 
 if [[ ! -s $python_lib_path/numpy ]]; then
   echo "Installing numpy"
   pushd $build_dir
-  tar -xzvf ../numpy-1.6.1.tar.gz
+  tar -xzf ../numpy-1.6.1.tar.gz
   cd numpy-1.6.1
+  cp ../../numpy-site.cfg site.cfg
   $python_prefix/bin/python setup.py install --prefix $install_dir --install-lib=$install_dir/lib/python$python_version/site-packages
-  popd  
+  popd
 fi
 
 for package in cdtime cdms2 regrid2 regrid; do
@@ -114,5 +112,4 @@ for package in cdtime cdms2 regrid2 regrid; do
   cd ..
 done
 
-
-sudo cp -r $install_dir/lib/python$python_version/site-packages/* $python_prefix/lib/python$python_version/site-packages/
+sudo cp -r $python_lib_path/* $python_install_path/
