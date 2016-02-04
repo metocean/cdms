@@ -171,7 +171,7 @@ cdunif_signalerror(int code)
     }
     release_Cdunif_lock();
     Py_END_ALLOW_THREADS;
-    fprintf(stderr, buffer); printf("\n");
+    fprintf(stderr, "%s", buffer); printf("\n");
     PyErr_SetString(PyExc_IOError, buffer);
  }
 }
