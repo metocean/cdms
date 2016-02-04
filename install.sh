@@ -1,7 +1,7 @@
 #
 # Dependencies
 #
-# libpng-devel jasper-devel zlib-devel curl-devel python-mako easy_install
+# libpng-devel jasper-devel zlib-devel curl-devel python-mako bison flex
 
 python=$(which python)
 if [ "$1" != "" ]; then
@@ -69,9 +69,9 @@ fi
 if [[ ! -s $install_dir/lib/libgrib2c.a || ! -s $install_dir/include/grib2.h ]]; then
   echo "Installing grib2clib"
   pushd $build_dir
-  tar -xzf ../g2clib-1.2.0.tar.gz
-  cd g2clib-1.2.0
-  patch -i ../../g2clib-1.2.0-makefile.patch
+  tar -xzf ../g2clib-1.4.0.tar.gz
+  cd g2clib-1.4.0
+  export CFLAGS=-fPIC
   make all
   mkdir -p $install_dir/lib/
   cp libgrib2c.a $install_dir/lib/
