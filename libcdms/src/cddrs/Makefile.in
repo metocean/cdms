@@ -48,7 +48,7 @@ ifeq ($(ARCH),x86_64)
 endif
 CFLAGS = -I../../include -I@NCINC@ -I@HDFINC@ -I@DRSINC@ @CFLAGS@ $(DEBUG) -Dgrads
 CPPFLAGS = @CPPFLAGS@
-DEBUG = -O
+DEBUG = -O2
 DEFS = @DEFS@
 FC = @FC@
 FFLAGS = -I../../include @FFLAGS@ $(DEBUG)
