@@ -186,7 +186,7 @@ def openDataset(uri,mode='r',template=None,dods=1):
         else:
             file = CdmsFile(path,mode)
             return file
-    elif scheme in ['http', 'gridftp']:
+    elif scheme in ['http', 'https', 'gridftp']:
         
         if (dods):
             if mode!='r': raise ModeNotSupported,mode
